@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :set_authors, only: [:new, :edit, :create, :update]
+  before_action :set_authors, only: [:new, :edit, :create, :update, :show]
 
   # GET /posts
   # GET /posts.json
@@ -74,6 +74,8 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:title, :subtitle, :content, :author_id)
+      params.require(:post).permit(:title, :subtitle, :content, :author_id, comments_attributes: [
+        :content, :author_id
+      ])
     end
 end

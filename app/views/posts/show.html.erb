@@ -1,6 +1,11 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <strong>Author:</strong>
+  <%= @post.author.name %>
+</p>
+
+<p>
   <strong>Title:</strong>
   <%= @post.title %>
 </p>
@@ -14,11 +19,33 @@
   <strong>Content:</strong>
   <%= @post.content %>
 </p>
+<hr>
+<%= form_with(model: @post, local: true) do |form| %>
+  
+  <%= form.fields_for :comments, Comment.new do |cf| %>
 
-<p>
-  <strong>Author:</strong>
-  <%= @post.author.name %>
-</p>
+    <%= cf.label :author_id %>
+    <%= cf.select(:author_id, @authors.collect {|a| [ a.name, a.id ] }, { prompt: 'Select Author' }) %>
+    
+    <br>
+
+    <%= cf.label :content %>
+    <%= cf.text_area :content, rows: 10 %>
+
+    <br>
+    <button>Comentar</button>
+  <% end %>
+  
+<% end %>
+
+<hr>
+
+<% @post.comments.each do |comment| %>
+  <small><b><%= comment.author.name %></b> (<%= comment.created_at %>)</small>
+  <p><%= comment.content %> </p>
+<% end %>
+
+<hr>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>
